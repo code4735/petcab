@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetCab — Служба комфортной перевозки домашних животных</title>
+
+  <!-- Подключение Tailwind CSS для работы классов (flex, bg-gradient-to-tr, rounded-2xl и др.) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Подключение Font Awesome для отображения иконки fa-paw -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Шрифты Nunito и Rubik -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Иконки Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0F172A;
+      --bg-card: #1E293B;
+      --accent: #F59E0B;
+      --accent-hover: #D97706;
+      --accent-soft: rgba(245, 158, 11, 0.15);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dark: #0F172A;
+      --border: #334155;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Rubik', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 15px 0;
+    }
+
+    .nav-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav ul { display: flex; list-style: none; gap: 25px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+    nav a:hover { color: var(--accent); }
+
+    .header-phone {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 1.05rem;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: var(--text-dark);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
+    }
+
+    .hero {
+      padding: 70px 0 50px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .hero-title { font-size: 3.2rem; line-height: 1.15; margin-bottom: 20px; }
+    .hero-desc { font-size: 1.15rem; color: var(--text-muted); margin-bottom: 30px; }
+
+    .hero-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-feat-item strong { display: block; font-size: 1.1rem; color: var(--text-main); }
+    .hero-feat-item span { font-size: 0.85rem; color: var(--text-muted); }
+
+    .hero-img-wrap {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 2px solid var(--border);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .hero-img-wrap img { width: 100%; height: 480px; object-fit: cover; display: block; }
+
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .section-title h2 { font-size: 2.4rem; margin-bottom: 10px; }
+    .section-title p { color: var(--text-muted); font-size: 1.1rem; }
+
+    .services { padding: 70px 0; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
+
+    .service-card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 1px solid var(--border);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .service-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+
+    .service-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .service-card h3 { font-size: 1.3rem; margin-bottom: 12px; }
+    .service-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+    .calc-section { padding: 70px 0; background-color: #151F32; }
+
+    .calc-box {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 40px;
+      border: 1px solid var(--border);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 18px;
+      background-color: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .calc-result {
+      background: var(--accent-soft);
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .calc-price { font-size: 2.2rem; font-weight: 900; color: var(--accent); font-family: 'Nunito', sans-serif; }
+
+    .checklist-section { padding: 70px 0; }
+    .checklist-box { background: var(--bg-card); border-radius: var(--radius); padding: 40px; border: 1px solid var(--border); }
+
+    .progress-bar-bg { background: var(--bg-dark); height: 12px; border-radius: 6px; overflow: hidden; margin: 20px 0 30px; }
+    .progress-bar-fill { background: var(--accent); height: 100%; width: 0%; transition: width 0.4s ease; }
+
+    .checklist-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+      background: var(--bg-dark);
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .check-item input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--accent); }
+
+    .booking-section { padding: 70px 0; }
+    .booking-card {
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      border-radius: var(--radius);
+      padding: 50px;
+      border: 1px solid var(--accent);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    footer { background-color: #0B1120; border-top: 1px solid var(--border); padding: 50px 0 25px; margin-top: 60px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; margin-bottom: 40px; }
+    .footer-desc { color: var(--text-muted); margin-top: 15px; font-size: 0.95rem; }
+    .footer-col h4 { margin-bottom: 20px; font-size: 1.1rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col a { color: var(--text-muted); text-decoration: none; }
+    .footer-col a:hover { color: var(--accent); }
+
+    .copyright { text-align: center; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero-features { justify-content: center; }
+      .calc-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-wrapper">
+
+      <!-- Встроенный ваш новый Tailwind/FontAwesome логотип -->
+      <a href="#" class="flex items-center gap-3 group no-underline">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-paw text-xl"></i>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-1">
+                Pet<span class="text-amber-500">Cab</span>
+            </span>
+            <span class="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">Служба перевозки животных</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul>
+          <li><a href="#services">Услуги</a></li>
+          <li><a href="#calc">Калькулятор</a></li>
+          <li><a href="#checklist">Чек-лист</a></li>
+          <li><a href="#booking">Заказать</a></li>
+        </ul>
+      </nav>
+
+      <a href="tel:+375291234567" class="header-phone">
+        <i data-lucide="phone"></i> +375 (29) 123-45-67
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero container">
+    <div>
+      <div class="hero-badge">
+        <i data-lucide="shield-check" size="16"></i> Перевозка животных по Минску и всей РБ
+      </div>
+      <h1 class="hero-title">Первый класс для ваших питомцев</h1>
+      <p class="hero-desc">Специально оборудованные автомобили, фиксаторы, автогамаки и заботливые водители. Безопасные поездки с комфортом для хвостиков.</p>
+
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <a href="#booking" class="btn-primary">
+          <i data-lucide="car"></i> Заказать поездку
+        </a>
+        <a href="#calc" class="btn-primary" style="background: transparent; border: 1px solid var(--border); color: var(--text-main);">
+          Рассчитать стоимость
+        </a>
+      </div>
+
+      <div class="hero-features">
+        <div class="hero-feat-item">
+          <strong>24 / 7</strong>
+          <span>Круглосуточно</span>
+        </div>
+        <div class="hero-feat-item">
+          <strong>Дезинфекция</strong>
+          <span>После каждого рейса</span>
+        </div>
+        <div class="hero-feat-item">
+          <strong>Без хозяина</strong>
+          <span>Сопровождение</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-img-wrap">
+      <img src="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=1000&q=80" alt="Собака едет в машине">
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="services container">
+    <div class="section-title">
+      <h2>Услуги и тарифы</h2>
+      <p>Выберите наиболее удобный формат поездки для вашего любимца</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="map-pin"></i></div>
+        <h3>Поездки по городу</h3>
+        <p>Быстрый трансфер в ветеринарную клинику, на груминг, вы выставку или дачу. От 25 BYN.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="plane"></i></div>
+        <h3>Вокзалы и Аэропорт</h3>
+        <p>Встреча и провожание. Помощь с переноской, багажом и ветдокументами. От 45 BYN.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="user-check"></i></div>
+        <h3>Такси без хозяина</h3>
+        <p>Водитель бережно заберет питомца, отстоит очередь у врача и вернет домой. От 35 BYN.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon"><i data-lucide="navigation"></i></div>
+        <h3>Междугородний рейс</h3>
+        <p>Комфортные междугородние поездки по Беларуси с регулярным выгулом и поением. От 1.2 BYN/км.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section id="calc" class="calc-section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Онлайн-калькулятор поездки</h2>
+        <p>Рассчитайте ориентировочную стоимость в белорусских рублях</p>
+      </div>
+
+      <div class="calc-box">
+        <div class="calc-grid">
+          <div class="form-group">
+            <label>Маршрут</label>
+            <select id="calc-type" onchange="calculatePrice()">
+              <option value="city">По Минску (город)</option>
+              <option value="suburb">Пригород / Заславль / Фаниполь</option>
+              <option value="intercity">Межгород по Беларуси</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Кто едет?</label>
+            <select id="calc-pet" onchange="calculatePrice()">
+              <option value="cat">Кошка / Мягкая переноска</option>
+              <option value="dog-s">Маленькая собака (до 10 кг)</option>
+              <option value="dog-m">Средняя собака (10-25 кг)</option>
+              <option value="dog-l">Крупная собака (от 25 кг)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Расстояние: <span id="dist-val" style="color: var(--accent); font-weight: 700;">10</span> км</label>
+          <input type="range" id="calc-dist" min="3" max="300" value="10" oninput="calculatePrice()">
+        </div>
+
+        <div class="calc-result">
+          <div style="font-size: 0.95rem; color: var(--text-muted);">Примерная стоимость поездки:</div>
+          <div class="calc-price" id="total-price">25 BYN</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Checklist -->
+  <section id="checklist" class="checklist-section container">
+    <div class="section-title">
+      <h2>Готовы к дороге?</h2>
+      <p>Интерактивный чек-лист подготовки питомца к спокойной поездке</p>
+    </div>
+
+    <div class="checklist-box">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <strong>Готовность к выезду:</strong>
+        <span id="progress-text" style="color: var(--accent); font-weight: 800; font-size: 1.2rem;">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+
+      <div class="checklist-items">
+        <label class="check-item">
+          <input type="checkbox" onchange="updateChecklist()">
+          <span>Питомец не ел за 2–3 часа до выезда</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="updateChecklist()">
+          <span>Подготовлен шлейка, ошейник или поводок</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="updateChecklist()">
+          <span>В переноске постелена впитывающая пеленка</span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" onchange="updateChecklist()">
+          <span>Взяты питьевая вода и любимая лакомка</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Form -->
+  <section id="booking" class="booking-section container">
+    <div class="booking-card">
+      <div class="section-title" style="margin-bottom: 30px;">
+        <h2>Забронировать PetCab</h2>
+        <p>Оставьте заявку — диспетчер рассчитает точный маршрут за 3 минуты</p>
+      </div>
+
+      <form onsubmit="event.preventDefault(); alert('Спасибо за заявку! Наш диспетчер свяжется с вами в ближайшее время.');">
+        <div class="calc-grid">
+          <div class="form-group">
+            <label>Ваше имя</label>
+            <input type="text" placeholder="Алексей" required>
+          </div>
+          <div class="form-group">
+            <label>Номер телефона</label>
+            <input type="tel" placeholder="+375 (29) 000-00-00" required>
+          </div>
+        </div>
+
+        <div class="calc-grid">
+          <div class="form-group">
+            <label>Откуда забрать?</label>
+            <input type="text" placeholder="г. Минск, пр. Независимости, 12" required>
+          </div>
+          <div class="form-group">
+            <label>Куда везём?</label>
+            <input type="text" placeholder="Ветклиника, ул. Гурского, 42" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Комментарий к поездке</label>
+          <textarea rows="3" placeholder="Укажите породу питомца, нужен ли выгул или поездка без присутствия владельца"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; padding: 16px; font-size: 1.15rem; margin-top: 10px;">
+          <i data-lucide="send"></i> Заказать PetCab
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <!-- Повторяем тот же логотип в подвале -->
+        <a href="#" class="flex items-center gap-3 group no-underline mb-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-600 flex items-center justify-center text-slate-950 font-bold text-lg shadow-lg shadow-amber-500/20">
+              <i class="fa-solid fa-paw"></i>
+          </div>
+          <div class="flex flex-col">
+              <span class="text-xl font-extrabold tracking-tight text-white flex items-center gap-1">
+                  Pet<span class="text-amber-500">Cab</span>
+              </span>
+              <span class="text-[9px] tracking-widest text-slate-400 uppercase font-semibold">Служба перевозки животных</span>
+          </div>
+        </a>
+        <p class="footer-desc">Бережная и деликатная транспортировка питомцев по Минску и всем регионам Беларуси.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Разделы</h4>
+        <ul>
+          <li><a href="#services">Услуги</a></li>
+          <li><a href="#calc">Калькулятор</a></li>
+          <li><a href="#checklist">Чек-лист</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <ul>
+          <li><a href="tel:+375291234567">+375 (29) 123-45-67</a></li>
+          <li><a href="#">Telegram: @PetCab_BY</a></li>
+          <li><a href="#">Viber / WhatsApp</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>График</h4>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Прием звонков: 08:00 – 22:00<br>Выезды: Круглосуточно 24/7</p>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 PetCab Беларусь. Все права защищены.
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function calculatePrice() {
+      const type = document.getElementById('calc-type').value;
+      const pet = document.getElementById('calc-pet').value;
+      const dist = parseInt(document.getElementById('calc-dist').value);
+
+      document.getElementById('dist-val').innerText = dist;
+
+      let base = 20;
+      let perKm = 1.0;
+
+      if (type === 'suburb') { base = 30; perKm = 1.2; }
+      if (type === 'intercity') { base = 40; perKm = 1.4; }
+
+      if (pet === 'dog-m') base += 5;
+      if (pet === 'dog-l') base += 10;
+
+      let total = Math.round(base + (dist * perKm));
+      document.getElementById('total-price').innerText = total + ' BYN';
+    }
+
+    function updateChecklist() {
+      const items = document.querySelectorAll('.check-item input');
+      let checked = 0;
+      items.forEach(item => { if (item.checked) checked++; });
+
+      let percent = Math.round((checked / items.length) * 100);
+      document.getElementById('progress-fill').style.width = percent + '%';
+      document.getElementById('progress-text').innerText = percent + '%';
+    }
+
+    calculatePrice();
+  </script>
+</body>
+</html>
